@@ -1,34 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// This file handles GET requests to /api/plugins/overnu-webhook/manifest
-export async function GET(req: NextRequest) {
-  // Replace <your-vercel-domain> with the final deployment domain,
-  // or dynamically build it (see "dynamically detect domain" approach).
+export async function GET(_req: NextRequest) {
   return NextResponse.json({
     api: [
       {
-        name: "sendDataToWebhook",
-        description: "Send data to OverNu from LobeChat",
-        url: "https://<your-vercel-domain>.vercel.app/api/plugins/overnu-webhook/webhook",
+        description: 'Send data to OverNu (n8n) from LobeChat',
+        name: 'sendDataToWebhook',
         parameters: {
-          type: "object",
           properties: {
             payload: {
-              type: "string",
-              description: "Data to send to OverNu"
-            }
+              description: 'Data to forward to OverNu',
+              type: 'string',
+            },
           },
-          required: ["payload"]
-        }
-      }
+          required: ['payload'],
+          type: 'object',
+        },
+        url: 'https://<your-vercel-domain>.vercel.app/api/plugins/overnu-webhook/webhook',
+      },
     ],
-    identifier: "overnu-webhook",
+    identifier: 'overnu-webhook',
     meta: {
-      avatar: "🚀",
-      tags: ["webhook"],
-      title: "OverNu Webhook Plugin",
-      description: "Fully integrated plugin for sending data to OverNu (n8n)"
+      description: 'Fully integrated plugin for sending data to OverNu webhooks',
+      tags: ['webhook'],
+      title: 'OverNu Webhook Plugin',
+      avatar: '🚀',
     },
-    version: "1"
+    version: '1',
   });
 }

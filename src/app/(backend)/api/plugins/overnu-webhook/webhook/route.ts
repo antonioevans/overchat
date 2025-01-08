@@ -1,34 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// This file handles POST requests to /api/plugins/overnu-webhook/webhook
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   try {
-    const { payload } = await req.json() ?? {};
+    const { payload } = await _req.json();
     if (!payload) {
-      return NextResponse.json({ error: "Missing payload" }, { status: 400 });
+      return NextResponse.json({ error: 'Missing payload' }, { status: 400 });
     }
 
-    // Example n8n endpoint + optional token
-    const n8nUrl = "https://quantaintelligence.app.n8n.cloud/webhook/a9234fec-4d8c-492f-ae2a-7fcda15d9a6f";
-    const token = "0iL3eWhg5hnSIWPPVlGYLmsU";
+    const token = '0iL3eWhg5hnSIWPPVlGYLmsU';
+    const n8nUrl =
+      'https://quantaintelligence.app.n8n.cloud/webhook/a9234fec-4d8c-492f-ae2a-7fcda15d9a6f';
 
-    // Make the server-side call to n8n
     const response = await fetch(n8nUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, payload })
+      body: JSON.stringify({ payload, token }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
     });
 
     if (!response.ok) {
       throw new Error(`n8n request failed with status ${response.status}`);
     }
 
-    const data = await response.text(); // or .json()
-    return NextResponse.json({ success: true, fromN8n: data });
+    const fromN8n = await response.text();
+    return NextResponse.json({ error: null, fromN8n, success: true });
   } catch (error: any) {
     return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
+      { error: error.message, fromN8n: null, success: false },
+      { status: 500 },
     );
   }
 }
